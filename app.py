@@ -14,13 +14,18 @@ scaler = joblib.load('scaler.pkl')
 kmeans = joblib.load('kmeans_model.pkl') # كان model ولّى kmeans
 
 def extract_features(image):
-    img = np.array(image.convert('L'))
-    img = cv2.resize(img, (128, 128))
+    img = image.resize((128, 128)) # استعملنا PIL باش نصغرو الصورة
+    img = img.convert('L') # حولناها رمادي
+    img = np.array(img)
+
     intensity = np.mean(img)
+    
     glcm = graycomatrix(img, distances=[1], angles=[0], levels=256, symmetric=True, normed=True)
     texture = graycoprops(glcm, 'contrast')[0, 0]
-    _, thresh = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+    
+    thresh = (img > 127) * 255 # بدلنا cv2.threshold بـ numpy
     surface = np.sum(thresh == 255)
+    
     return [intensity, texture, surface]
 
 uploaded_file = st.file_uploader("Choisissez une image IRM...", type=["jpg", "png", "jpeg"])
