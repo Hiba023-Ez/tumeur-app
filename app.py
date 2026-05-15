@@ -1,6 +1,6 @@
 import streamlit as st
 import joblib
-import cv2
+
 import numpy as np
 from skimage.feature import graycomatrix, graycoprops
 from PIL import Image
